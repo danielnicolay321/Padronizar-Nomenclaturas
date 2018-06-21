@@ -35,8 +35,14 @@ namespace Padronizar_Nomenclaturas
                 doThings = new DoThings(textBoxSelecionePlanilha.Text);
 
                 comboBoxDePara.DataSource = new BindingSource(doThings.Abas, null);
+                comboBoxDePara.SelectedIndex = -1;
                 comboBoxDePara.DisplayMember = "Key";
-                comboBoxDePara.ValueMember = "Value";            
+                comboBoxDePara.ValueMember = "Value";
+
+                comboBoxAbaLeituraEscrita.DataSource = new BindingSource(doThings.Abas, null);
+                comboBoxAbaLeituraEscrita.SelectedIndex = -1;
+                comboBoxAbaLeituraEscrita.DisplayMember = "Key";
+                comboBoxAbaLeituraEscrita.ValueMember = "Value";
             }
             catch(Exception ex)
             {
@@ -44,11 +50,20 @@ namespace Padronizar_Nomenclaturas
             }
         }
 
+        private void comboBoxAbaLeituraEscrita_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+
+        }
+
+
         private void comboBoxDePara_SelectionChangeCommitted(object sender, EventArgs e)
         {
             try
             {
-                var colunas = doThings.ValidarEntradasAbaDePara(comboBoxDePara.GetItemText(comboBoxDePara.SelectedItem));
+                var result = doThings.ValidarEntradasAbaDePara(comboBoxDePara.GetItemText(comboBoxDePara.SelectedItem));
+
+              //  var colunas = result.Where(x => x.Key.Equals(comboBoxDePara.GetItemText(comboBoxDePara.SelectedItem))).Select(z => z.Value);
+                var colunas = result.First(x => x.Key == comboBoxDePara.GetItemText(comboBoxDePara.SelectedItem)).Value;//.ToDictionary(dc => dc.Key, dc => dc.Value);
 
                 comboBoxColunaFabricante.DataSource = new BindingSource(colunas, null);
                 comboBoxColunaFabricante.DisplayMember = "Value";
@@ -89,99 +104,11 @@ namespace Padronizar_Nomenclaturas
                 comboBoxDePara.GetItemText(comboBoxDePara.SelectedItem));
         }
 
+      
 
 
-        #region WriteExcelFile        
-        //public static void WriteExcelFile(System.Data.DataTable dataTable)
-        //{
-        //    Microsoft.Office.Interop.Excel.Application excel;
-        //    Microsoft.Office.Interop.Excel.Workbook worKbooK;
-        //    Microsoft.Office.Interop.Excel.Worksheet worKsheeT;
-        //    Microsoft.Office.Interop.Excel.Range celLrangE;
 
-        //    excel = new Microsoft.Office.Interop.Excel.Application();
-        //    excel.Visible = false;
-        //    excel.DisplayAlerts = false;
-        //    worKbooK = excel.Workbooks.Add(Type.Missing);
-        //    worKsheeT = (Microsoft.Office.Interop.Excel.Worksheet)worKbooK.ActiveSheet;
-        //    int rowcount = 2;
-
-        //    foreach (DataRow datarow in dataTable.Rows)
-        //    {
-        //        rowcount += 1;
-        //        for (int i = 1; i <= dataTable.Columns.Count; i++)
-        //        {
-
-        //            if (rowcount == 3)
-        //            {
-        //                worKsheeT.Cells[2, i] = dataTable.Columns[i - 1].ColumnName;
-
-        //            }
-
-        //            worKsheeT.Cells[rowcount, i] = datarow[i - 1].ToString();
-
-        //            if (rowcount > 3)
-        //            {
-        //                if (i == dataTable.Columns.Count)
-        //                {
-        //                    if (rowcount % 2 == 0)
-        //                    {
-        //                        celLrangE = worKsheeT.Range[worKsheeT.Cells[rowcount, 1], worKsheeT.Cells[rowcount, dataTable.Columns.Count]];
-
-        //                    }
-        //                }
-        //            } // if (rowcount > 3)
-        //        } // for (int i = 1; i <= tst.Columns.Count; i++)
-        //    } // foreach (DataRow datarow in tst.Rows)
-
-
-        //    celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[rowcount, dataTable.Columns.Count]];
-        //    celLrangE.EntireColumn.AutoFit();
-        //    celLrangE.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-        //    celLrangE.Font.Size = 8;
-        //    celLrangE.Font.FontStyle = "Calibri";
-
-        //    Microsoft.Office.Interop.Excel.Borders border = celLrangE.Borders;
-        //    border.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
-        //    border.Weight = 2d;
-
-        //    celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[2, dataTable.Columns.Count]];
-
-        //    var path = @"C:\Relatorio";
-
-        //    try
-        //    {
-        //        // Determine whether the directory exists.
-        //        if (!Directory.Exists(path))
-        //        {
-        //            // Try to create the directory.
-        //            DirectoryInfo di = Directory.CreateDirectory(path);
-        //        }
-
-        //        worKbooK.SaveAs(path + "\\planilha_semanal_Robo.xlsx");
-        //        worKbooK.Close();
-
-        //        // Delete the directory.
-        //        //di.Delete();
-        //        //Console.WriteLine("The directory was deleted successfully.");
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine("The process to check/create folder failed: {0}", e.ToString());
-        //    }
-
-        //    excel.Quit();
-
-
-        //    Console.WriteLine("Planilha gerada com sucesso. Ela foi salva no diretorio -> C:/Relatorio/planilha_semanal_Robo.xlsx");
-
-        //    Console.WriteLine("Aperte a tecla ENTER para finalizar o programa....");
-        //    ConsoleKeyInfo keyInfo = Console.ReadKey();
-
-        //    while (keyInfo.Key != ConsoleKey.Enter)
-        //        keyInfo = Console.ReadKey();
-        //}
-        #endregion
+  
 
 
     }

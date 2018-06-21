@@ -42,6 +42,12 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonSelecionar = new System.Windows.Forms.Button();
             this.openFileDialogSelecionarPlanilha = new System.Windows.Forms.OpenFileDialog();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.comboBoxColunaLeitura = new System.Windows.Forms.ComboBox();
+            this.comboBoxColunaEscrita = new System.Windows.Forms.ComboBox();
+            this.comboBoxAbaLeituraEscrita = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -73,7 +79,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 66);
+            this.label2.Location = new System.Drawing.Point(13, 185);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(165, 13);
             this.label2.TabIndex = 3;
@@ -82,7 +88,7 @@
             // comboBoxDePara
             // 
             this.comboBoxDePara.FormattingEnabled = true;
-            this.comboBoxDePara.Location = new System.Drawing.Point(16, 85);
+            this.comboBoxDePara.Location = new System.Drawing.Point(16, 204);
             this.comboBoxDePara.Name = "comboBoxDePara";
             this.comboBoxDePara.Size = new System.Drawing.Size(481, 21);
             this.comboBoxDePara.TabIndex = 4;
@@ -91,33 +97,33 @@
             // comboBoxColunaFabricante
             // 
             this.comboBoxColunaFabricante.FormattingEnabled = true;
-            this.comboBoxColunaFabricante.Location = new System.Drawing.Point(16, 144);
+            this.comboBoxColunaFabricante.Location = new System.Drawing.Point(16, 263);
             this.comboBoxColunaFabricante.Name = "comboBoxColunaFabricante";
-            this.comboBoxColunaFabricante.Size = new System.Drawing.Size(208, 21);
+            this.comboBoxColunaFabricante.Size = new System.Drawing.Size(230, 21);
             this.comboBoxColunaFabricante.TabIndex = 5;
             // 
             // comboBoxColunaModeloPadrao
             // 
             this.comboBoxColunaModeloPadrao.FormattingEnabled = true;
-            this.comboBoxColunaModeloPadrao.Location = new System.Drawing.Point(273, 144);
+            this.comboBoxColunaModeloPadrao.Location = new System.Drawing.Point(273, 263);
             this.comboBoxColunaModeloPadrao.Name = "comboBoxColunaModeloPadrao";
-            this.comboBoxColunaModeloPadrao.Size = new System.Drawing.Size(203, 21);
+            this.comboBoxColunaModeloPadrao.Size = new System.Drawing.Size(224, 21);
             this.comboBoxColunaModeloPadrao.TabIndex = 6;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 124);
+            this.label3.Location = new System.Drawing.Point(13, 243);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(93, 13);
+            this.label3.Size = new System.Drawing.Size(128, 13);
             this.label3.TabIndex = 7;
-            this.label3.Text = "Coluna Fabricante";
+            this.label3.Text = "Coluna Fabricante/Marca";
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(273, 125);
+            this.label4.Location = new System.Drawing.Point(273, 244);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(115, 13);
             this.label4.TabIndex = 8;
@@ -125,7 +131,7 @@
             // 
             // btnIniciar
             // 
-            this.btnIniciar.Location = new System.Drawing.Point(171, 253);
+            this.btnIniciar.Location = new System.Drawing.Point(172, 363);
             this.btnIniciar.Name = "btnIniciar";
             this.btnIniciar.Size = new System.Drawing.Size(165, 23);
             this.btnIniciar.TabIndex = 9;
@@ -136,7 +142,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(16, 180);
+            this.label5.Location = new System.Drawing.Point(16, 299);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(143, 13);
             this.label5.TabIndex = 10;
@@ -144,14 +150,14 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(16, 200);
+            this.textBox1.Location = new System.Drawing.Point(16, 319);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(371, 20);
             this.textBox1.TabIndex = 11;
             // 
             // buttonSelecionar
             // 
-            this.buttonSelecionar.Location = new System.Drawing.Point(410, 200);
+            this.buttonSelecionar.Location = new System.Drawing.Point(410, 319);
             this.buttonSelecionar.Name = "buttonSelecionar";
             this.buttonSelecionar.Size = new System.Drawing.Size(90, 23);
             this.buttonSelecionar.TabIndex = 12;
@@ -163,11 +169,69 @@
             // 
             this.openFileDialogSelecionarPlanilha.FileName = "openFileDialog1";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(13, 129);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(90, 13);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "Coluna de Leitura";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(270, 129);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(90, 13);
+            this.label7.TabIndex = 14;
+            this.label7.Text = "Coluna de Escrita";
+            // 
+            // comboBoxColunaLeitura
+            // 
+            this.comboBoxColunaLeitura.FormattingEnabled = true;
+            this.comboBoxColunaLeitura.Location = new System.Drawing.Point(16, 145);
+            this.comboBoxColunaLeitura.Name = "comboBoxColunaLeitura";
+            this.comboBoxColunaLeitura.Size = new System.Drawing.Size(233, 21);
+            this.comboBoxColunaLeitura.TabIndex = 15;
+            // 
+            // comboBoxColunaEscrita
+            // 
+            this.comboBoxColunaEscrita.FormattingEnabled = true;
+            this.comboBoxColunaEscrita.Location = new System.Drawing.Point(270, 146);
+            this.comboBoxColunaEscrita.Name = "comboBoxColunaEscrita";
+            this.comboBoxColunaEscrita.Size = new System.Drawing.Size(228, 21);
+            this.comboBoxColunaEscrita.TabIndex = 16;
+            // 
+            // comboBoxAbaLeituraEscrita
+            // 
+            this.comboBoxAbaLeituraEscrita.FormattingEnabled = true;
+            this.comboBoxAbaLeituraEscrita.Location = new System.Drawing.Point(13, 85);
+            this.comboBoxAbaLeituraEscrita.Name = "comboBoxAbaLeituraEscrita";
+            this.comboBoxAbaLeituraEscrita.Size = new System.Drawing.Size(484, 21);
+            this.comboBoxAbaLeituraEscrita.TabIndex = 17;
+            this.comboBoxAbaLeituraEscrita.SelectionChangeCommitted += new System.EventHandler(this.comboBoxAbaLeituraEscrita_SelectionChangeCommitted);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(13, 66);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(173, 13);
+            this.label8.TabIndex = 18;
+            this.label8.Text = "Selecione a aba de leitura e escrita";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(512, 296);
+            this.ClientSize = new System.Drawing.Size(512, 409);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.comboBoxAbaLeituraEscrita);
+            this.Controls.Add(this.comboBoxColunaEscrita);
+            this.Controls.Add(this.comboBoxColunaLeitura);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.buttonSelecionar);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label5);
@@ -204,6 +268,12 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button buttonSelecionar;
         private System.Windows.Forms.OpenFileDialog openFileDialogSelecionarPlanilha;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox comboBoxColunaLeitura;
+        private System.Windows.Forms.ComboBox comboBoxColunaEscrita;
+        private System.Windows.Forms.ComboBox comboBoxAbaLeituraEscrita;
+        private System.Windows.Forms.Label label8;
     }
 }
 
