@@ -2,4 +2,4 @@
 Padronização de nomenclaturas
 
 # Required
-Office 2010+
+Office 2016
