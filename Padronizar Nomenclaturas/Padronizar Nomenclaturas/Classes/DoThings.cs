@@ -22,11 +22,8 @@ namespace Padronizar_Nomenclaturas.Classes
         public Excel._Application oApp { get; set; }
         public Excel.Workbook oWorkbook { get; set; }
         public Excel.Workbook oWorkbookCopy { get; set; }
-
         public Excel.Worksheet Wsheet { get; set; }
-
-        public List<KeyValuePair<string, Dictionary<int, string>>> DeParaColumns = new List<KeyValuePair<string, Dictionary<int, string>>>();
-
+        public List<KeyValuePair<string, Dictionary<int, string>>> DeParaColumns { get; set; }
       //  public Dictionary<int, string> DeParaColumns { get; set; }
         public Dictionary<int, string> ReadAndWriteColumns { get; set; }
         public Dictionary<string, int> Abas { get; set; }
@@ -37,13 +34,16 @@ namespace Padronizar_Nomenclaturas.Classes
 
         Tuple<int, int> IndiceColunaModeloPadrao = new Tuple<int, int>(0, 0);
         Tuple<int, int> IndiceColunaFabricante = new Tuple<int, int>(0, 0);
+        Tuple<int, int> IndiceColunaFabricante2 = new Tuple<int, int>(0, 0);
+        Tuple<int, int> IndiceColunaParaLer = new Tuple<int, int>(0, 0);
+        Tuple<int, int> IndiceColunaParaGravar = new Tuple<int, int>(0, 0);
 
         public DoThings(string nomeItem)
         {
+            DeParaColumns = new List<KeyValuePair<string, Dictionary<int, string>>>();
             _planilhaDeOrigem = nomeItem;
             ValidarEntradasPlanilhaOrigem();      
         }
-
 
         public void ValidarEntradasPlanilhaOrigem()
         {
@@ -98,16 +98,13 @@ namespace Padronizar_Nomenclaturas.Classes
             return DeParaColumns;
         }
 
-
-
         public List<KeyValuePair<string, string>> CarregarValoresDePara(string ColunaFabricante, string ColunaModeloPadrao, string nomeAba)
         {
             ValoresDePara = new List<KeyValuePair<string, string>>();
-
-            var tst = oWorkbook.Worksheets[nomeAba];
-            var colNo = tst.UsedRange.Columns.Count;
-            var rowNo = tst.UsedRange.Rows.Count;
-            object[,] array = tst.UsedRange.Value;
+            var excelSheet = oWorkbook.Worksheets[nomeAba];
+            var colNo = excelSheet.UsedRange.Columns.Count;
+            var rowNo = excelSheet.UsedRange.Rows.Count;
+            object[,] array = excelSheet.UsedRange.Value;
 
             for (int i = 1; i <= colNo; i++ )
             {
@@ -116,7 +113,6 @@ namespace Padronizar_Nomenclaturas.Classes
                     if (array[1, i].ToString() == ColunaFabricante)
                     {
                         IndiceColunaFabricante = new Tuple<int, int>(1, i);
-                       
                     }
                     else if(array[1, i].ToString() == ColunaModeloPadrao)
                     {
@@ -132,7 +128,6 @@ namespace Padronizar_Nomenclaturas.Classes
                 {
                     break;
                 }
-
                 try
                 {
                     ValoresDePara.Add(new KeyValuePair<string, string>((array[contAux, IndiceColunaFabricante.Item2].ToString()), (array[contAux, IndiceColunaModeloPadrao.Item2].ToString())));
@@ -145,12 +140,37 @@ namespace Padronizar_Nomenclaturas.Classes
 
             var valoresDeParaAgrupadosPorFabricante = ValoresDePara.GroupBy(x => x.Key)
                 .Select(group => new KeyValuePair<string, List<string>>(group.Key, group.Select(t => t.Value).ToList())).ToList();
-
             SepararModelosPorFabricante(valoresDeParaAgrupadosPorFabricante);
 
             return ValoresDePara;
         } // public Dictionary<string, string> CarregarValoresDePara
 
+        public void SetColumnIndexOfReadAndWrite(string sheetSname, string columnToRead, string columnToWrite, string columnFabricante)
+        {
+            var excelSheet = oWorkbook.Worksheets[sheetSname];
+            var colNo = excelSheet.UsedRange.Columns.Count;
+            var rowNo = excelSheet.UsedRange.Rows.Count;
+            object[,] array = excelSheet.UsedRange.Value;
+
+            for (int i = 1; i <= colNo; i++)
+            {
+                if (array[1, i] != null)
+                {
+                    if (array[1, i].ToString() == columnToRead)
+                    {
+                        IndiceColunaParaLer = new Tuple<int, int>(1, i);
+                    }
+                    else if (array[1, i].ToString() == columnToWrite)
+                    {
+                        IndiceColunaParaGravar = new Tuple<int, int>(1, i);
+                    }
+                    else if (array[1, i].ToString() == columnFabricante)
+                    {
+                        IndiceColunaFabricante2 = new Tuple<int, int>(1, i);
+                    }
+                }
+            } // for  (int i = 1; i <= colNo; i++ )
+        }
 
         public void SepararModelosPorFabricante(List<KeyValuePair<string, List<string>>> modelsByBrand1)
         {
@@ -175,31 +195,36 @@ namespace Padronizar_Nomenclaturas.Classes
 
             } // foreach(var item in modelsByBrand)
             Console.WriteLine("");
-            GetModelNameByBrand("iphone 5s 16gb adas adoijsa motorola samsung teste ifone 4g", "APPLE");
+            //GetModelNameByBrand("iphone 5s 16gb adas adoijsa motorola samsung teste ifone 4g", "APPLE");
         } // public void SepararModelosPorFabricante(List<KeyValuePair<string, List<string>>> modelsByBrand)
 
 
-        public void GetModelNameByBrand(string text, string brand)
+        public string GetModelNameByBrand(string text, string brand)
         {
             var arrImportante = wordListByBrand.Where(x => x.Key.ToLower().Equals(brand.ToLower())).Select(y => y.Value);
 
-            List<string> tsts = new List<string>();
+            List<string> stringList = new List<string>();
 
             foreach(var item in arrImportante)
             {
                 foreach(var item2 in item)
                 {
-                    tsts.Add(item2);
-                }
-                
+                    stringList.Add(item2);
+                }            
             }
 
-            Console.WriteLine(tsts);
+            Console.WriteLine(stringList);
             Console.WriteLine(arrImportante);
             var textListAux = text.Split(null);
 
-            var listAux2 = textListAux.Where(x => tsts.Any(y => y.ToLower() == x.ToLower())).ToList();
-            GetFinalName(listAux2.Aggregate((a, b) => a + " " + b), brand); 
+            var listAux2 = textListAux.Where(x => stringList.Any(y => y.ToLower() == x.ToLower())).ToList();
+            string text2 = "";
+            if (listAux2.Count != 0)
+            {
+                text2 = listAux2.Aggregate((a, b) => a + " " + b);
+            }
+
+            return GetFinalName(text2, brand); 
         } // public void GetModelNameByBrand(string text, string brand)
 
 
@@ -219,7 +244,6 @@ namespace Padronizar_Nomenclaturas.Classes
             }
 
             List<string> listAux4 = new List<string>();
-
             foreach (var item in modelosPadrao)
             {
                 if (text.ToLower().Contains(item.ToLower()))
@@ -230,15 +254,15 @@ namespace Padronizar_Nomenclaturas.Classes
 
             Console.WriteLine(listAux4);
 
-            var teste = new Dictionary<string, int>();
+            var listOfValues = new Dictionary<string, int>();
 
             foreach (var item in listAux4)
             {
-                teste.Add(item, Compute(item, text));
+                listOfValues.Add(item, Compute(item, text));
             }
 
 
-            var abc = teste.OrderByDescending(key => key.Value);
+            var abc = listOfValues.OrderByDescending(key => key.Value);
 
             if (abc.Count() == 0)
             {
@@ -305,269 +329,33 @@ namespace Padronizar_Nomenclaturas.Classes
             return d[n, m];
         }
 
-
-
-
-        //public static System.Data.DataTable ExportToExcel(Excel.Worksheet oWorksheet)
-        //{
-        //    System.Data.DataTable table = new System.Data.DataTable();
-
-        //    table.Columns.Add("SEMANA_MES", typeof(string)); // 1
-        //    table.Columns.Add("SEMANA_ANO", typeof(string)); // 2
-        //    table.Columns.Add("MODELO_PADRONIZADO", typeof(string));// 3
-        //    table.Columns.Add("ORIGEM", typeof(string));  // 4
-        //    table.Columns.Add("DATA", typeof(string)); // 5
-        //    table.Columns.Add("FABRICANTE", typeof(string));
-        //    table.Columns.Add("MODELO_ORIGINAL", typeof(string)); // 6
-        //    table.Columns.Add("SITUACAO_DO_APARELHO", typeof(string)); // 8
-        //    table.Columns.Add("TIPO_NEGOCIACAO_CLIENTE", typeof(string)); // 9
-        //    table.Columns.Add("VALOR", typeof(string)); // 10
-        //    table.Columns.Add("CONDICAO_DE_PAGAMENTO", typeof(string));// 11
-        //    table.Columns.Add("URL_FONTE", typeof(string)); // 12
-
-        //    //nr de colunas da planilha carregada
-        //    int colNo = oWorksheet.UsedRange.Columns.Count;
-        //    //nr de linhas da planilha carregada
-        //    int rowNo = oWorksheet.UsedRange.Rows.Count;
-        //    // read the value into an array.
-        //    object[,] array = oWorksheet.UsedRange.Value;
-
-        //    string modeloOriginal = "";
-        //    string modeloPadronizado = "";
-        //    string urlfonte = "";
-        //    //    string valor = "";
-        //    string condicaoPagamento = "";
-        //    string situacaoAparelho = "";
-        //    string fabricante = "";
-        //    string orig = "";
-        //    string semanaMes = "";
-        //    string semanaAno = "";
-
-        //    string ORIGEM = "";
-        //    string SEMANA_MES = "";
-        //    string SEMANA_ANO = "";
-        //    string FABRICANTE = "";
-        //    string MODELO_ORIGINAL = "";
-        //    string MODELO_PADRONIZADO = "";
-        //    string SITUACAO_DO_APARELHO = "";
-        //    string TIPO_NEGOCIACAO_CLIENTE = "";
-        //    string VALOR = "";
-        //    //string VALOR_DE_COMPRA = "";
-        //    //string VALOR_DE_VENDA = "";
-        //    string CONDICAO_DE_PAGAMENTO = "";
-        //    string URL_FONTE = "";
-        //    string DATA = "";
-
-
-        //    // j = NR DE LINHAS 
-        //    for (int j = 1; j <= rowNo; j++)
-        //    {
-        //        string modeloPadronizadoSemLixo = "";
-
-        //        int contAux = j + 1;
-        //        if (contAux > rowNo)
-        //        {
-        //            break;
-        //        }
-        //        try
-        //        {
-        //            FABRICANTE = array[contAux, 6].ToString();
-        //            var desconsiderar = IdentificarFabricante(FABRICANTE);
-        //            if (!desconsiderar)
-        //            {
-        //                continue;
-        //            }
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            FABRICANTE = "";
-        //        }
-
-
-        //        try
-        //        {
-        //            SEMANA_MES = array[contAux, 1].ToString();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            SEMANA_MES = "";
-        //        }
-
-        //        try
-        //        {
-
-        //            SEMANA_ANO = array[contAux, 2].ToString();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            SEMANA_ANO = "";
-        //        }
-        //        try
-        //        {
-        //            MODELO_PADRONIZADO = SetBrandParameters(array[contAux, 6].ToString(), array[contAux, 7].ToString(), array[contAux, 12].ToString());
-        //            MODELO_PADRONIZADO = MODELO_PADRONIZADO.Trim();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            MODELO_PADRONIZADO = "";
-        //        }
-
-        //        try
-        //        {
-        //            ORIGEM = array[contAux, 4].ToString();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            ORIGEM = "";
-        //        }
-
-        //        try
-        //        {
-        //            DATA = array[contAux, 5].ToString();
-        //            var spt = DATA.Split(null);
-
-        //            DATA = spt[0];
-        //            var abc = DateTime.Parse(DATA).Date;
-        //            var abc2 = abc.ToString("dd/MM/yyyy");
-        //            Console.WriteLine(abc2);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            DATA = "";
-        //        }
-
-        //        try
-        //        {
-        //            MODELO_ORIGINAL = array[contAux, 7].ToString();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            MODELO_ORIGINAL = "";
-        //        }
-        //        try
-        //        {
-        //            SITUACAO_DO_APARELHO = array[contAux, 8].ToString();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            SITUACAO_DO_APARELHO = "";
-        //        }
-        //        try
-        //        {
-        //            TIPO_NEGOCIACAO_CLIENTE = array[contAux, 9].ToString();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            TIPO_NEGOCIACAO_CLIENTE = "";
-        //        }
-
-        //        try
-        //        {
-        //            VALOR = array[contAux, 10].ToString();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            VALOR = "";
-        //        }
-
-        //        try
-        //        {
-        //            CONDICAO_DE_PAGAMENTO = array[contAux, 11].ToString();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            CONDICAO_DE_PAGAMENTO = "";
-        //        }
-        //        try
-        //        {
-        //            URL_FONTE = array[contAux, 12].ToString();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            URL_FONTE = "";
-        //        }
-
-
-        //        table.Rows.Add(
-        //            SEMANA_MES,
-        //            SEMANA_ANO,
-        //            MODELO_PADRONIZADO, //5 MODELO_PADRONIZADO (TRATAMENTO)
-        //            ORIGEM, // 1 ORIGEM
-        //            DATA,  //2  DATA
-        //            FABRICANTE, //3 FABRICANTE
-        //            MODELO_ORIGINAL,//4 MODELO_ORIGINAL                  
-        //            SITUACAO_DO_APARELHO,//6 SITUACAO_DO_APARELHO
-        //            TIPO_NEGOCIACAO_CLIENTE,//7 TIPO_NEGOCIACAO
-        //            VALOR, //8 VALOR
-        //            CONDICAO_DE_PAGAMENTO, //11 CONDICAO_DE_PAGAMENTO
-        //            URL_FONTE);//12 URL_FONTE
-
-        //    } // for int j
-
-
-        //    return table;
-        //}
-
-
-
-
         #region WriteExcelFile
-        public static void WriteExcelFile(System.Data.DataTable dataTable)
+        public void WriteExcelFile(string sheetName, string columnToRead, string columnToWrite, string path)
         {
-            Microsoft.Office.Interop.Excel.Application excel;
-            Microsoft.Office.Interop.Excel.Workbook worKbooK;
-            Microsoft.Office.Interop.Excel.Worksheet worKsheeT;
-            Microsoft.Office.Interop.Excel.Range celLrangE;
+            var app = new Excel.Application();
+            app.Visible = false;
+            app.DisplayAlerts = false;
 
-            excel = new Microsoft.Office.Interop.Excel.Application();
-            excel.Visible = false;
-            excel.DisplayAlerts = false;
-            worKbooK = excel.Workbooks.Add(Type.Missing);
-            worKsheeT = (Microsoft.Office.Interop.Excel.Worksheet)worKbooK.ActiveSheet;
-            int rowcount = 2;
+            var excel = oWorkbook;      
+            var table = excel.Worksheets[sheetName];
 
-            foreach (DataRow datarow in dataTable.Rows)
+            var rowNo = table.UsedRange.Rows.Count;
+            object[,] array = table.UsedRange.Value;
+
+            string newValue = "";
+            // assume that the 1st row = col name
+            for(var rowIndex = 2; rowIndex <= rowNo; rowIndex++)
             {
-                rowcount += 1;
-                for (int i = 1; i <= dataTable.Columns.Count; i++)
-                {
+                //GetModelNameByBrand("iphone 5s 16gb adas adoijsa motorola samsung teste ifone 4g", "APPLE");
+                //IndiceColunaParaLer; IndiceColunaParaGravar; 2nd item = col position
+                newValue = GetModelNameByBrand(table.Cells[rowIndex, IndiceColunaParaLer.Item2].Text, table.Cells[rowIndex, IndiceColunaFabricante2.Item2].Text); //read value
+                table.Cells[rowIndex, IndiceColunaParaGravar.Item2] = newValue; //write new value
+            }
 
-                    if (rowcount == 3)
-                    {
-                        worKsheeT.Cells[2, i] = dataTable.Columns[i - 1].ColumnName;
-
-                    }
-
-                    worKsheeT.Cells[rowcount, i] = datarow[i - 1].ToString();
-
-                    if (rowcount > 3)
-                    {
-                        if (i == dataTable.Columns.Count)
-                        {
-                            if (rowcount % 2 == 0)
-                            {
-                                celLrangE = worKsheeT.Range[worKsheeT.Cells[rowcount, 1], worKsheeT.Cells[rowcount, dataTable.Columns.Count]];
-
-                            }
-                        }
-                    } // if (rowcount > 3)
-                } // for (int i = 1; i <= tst.Columns.Count; i++)
-            } // foreach (DataRow datarow in tst.Rows)
-
-
-            celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[rowcount, dataTable.Columns.Count]];
-            celLrangE.EntireColumn.AutoFit();
-            celLrangE.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-            celLrangE.Font.Size = 8;
-            celLrangE.Font.FontStyle = "Calibri";
-
-            Microsoft.Office.Interop.Excel.Borders border = celLrangE.Borders;
-            border.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
-            border.Weight = 2d;
-
-            celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[2, dataTable.Columns.Count]];
-
-            var path = @"C:\Relatorio";
+            //foreach(var item in excel.Worksheets)
+            //{
+            //    app.Workbooks.Add(item);
+            //}
 
             try
             {
@@ -578,8 +366,8 @@ namespace Padronizar_Nomenclaturas.Classes
                     DirectoryInfo di = Directory.CreateDirectory(path);
                 }
 
-                worKbooK.SaveAs(path + "\\planilha_semanal_Robo.xlsx");
-                worKbooK.Close();
+                table.SaveAs(path + "\\TesteCopiaExcel.xlsx");
+              //  app.Quit();
 
                 // Delete the directory.
                 //di.Delete();
@@ -589,8 +377,6 @@ namespace Padronizar_Nomenclaturas.Classes
             {
                 Console.WriteLine("The process to check/create folder failed: {0}", e.ToString());
             }
-
-            excel.Quit();
         }
         #endregion
 

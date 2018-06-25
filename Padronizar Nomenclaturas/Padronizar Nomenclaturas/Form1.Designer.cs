@@ -39,7 +39,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.btnIniciar = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxSalvarOnde = new System.Windows.Forms.TextBox();
             this.buttonSelecionar = new System.Windows.Forms.Button();
             this.openFileDialogSelecionarPlanilha = new System.Windows.Forms.OpenFileDialog();
             this.label6 = new System.Windows.Forms.Label();
@@ -48,6 +48,9 @@
             this.comboBoxColunaEscrita = new System.Windows.Forms.ComboBox();
             this.comboBoxAbaLeituraEscrita = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.comboBoxColunaFab = new System.Windows.Forms.ComboBox();
+            this.labelColunaFabricante = new System.Windows.Forms.Label();
+            this.folderBrowserDialogSave = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -148,12 +151,12 @@
             this.label5.TabIndex = 10;
             this.label5.Text = "Selecione o local para salvar";
             // 
-            // textBox1
+            // textBoxSalvarOnde
             // 
-            this.textBox1.Location = new System.Drawing.Point(16, 319);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(371, 20);
-            this.textBox1.TabIndex = 11;
+            this.textBoxSalvarOnde.Location = new System.Drawing.Point(16, 319);
+            this.textBoxSalvarOnde.Name = "textBoxSalvarOnde";
+            this.textBoxSalvarOnde.Size = new System.Drawing.Size(371, 20);
+            this.textBoxSalvarOnde.TabIndex = 11;
             // 
             // buttonSelecionar
             // 
@@ -181,7 +184,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(270, 129);
+            this.label7.Location = new System.Drawing.Point(192, 129);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(90, 13);
             this.label7.TabIndex = 14;
@@ -192,15 +195,15 @@
             this.comboBoxColunaLeitura.FormattingEnabled = true;
             this.comboBoxColunaLeitura.Location = new System.Drawing.Point(16, 145);
             this.comboBoxColunaLeitura.Name = "comboBoxColunaLeitura";
-            this.comboBoxColunaLeitura.Size = new System.Drawing.Size(233, 21);
+            this.comboBoxColunaLeitura.Size = new System.Drawing.Size(135, 21);
             this.comboBoxColunaLeitura.TabIndex = 15;
             // 
             // comboBoxColunaEscrita
             // 
             this.comboBoxColunaEscrita.FormattingEnabled = true;
-            this.comboBoxColunaEscrita.Location = new System.Drawing.Point(270, 146);
+            this.comboBoxColunaEscrita.Location = new System.Drawing.Point(193, 146);
             this.comboBoxColunaEscrita.Name = "comboBoxColunaEscrita";
-            this.comboBoxColunaEscrita.Size = new System.Drawing.Size(228, 21);
+            this.comboBoxColunaEscrita.Size = new System.Drawing.Size(130, 21);
             this.comboBoxColunaEscrita.TabIndex = 16;
             // 
             // comboBoxAbaLeituraEscrita
@@ -221,11 +224,30 @@
             this.label8.TabIndex = 18;
             this.label8.Text = "Selecione a aba de leitura e escrita";
             // 
+            // comboBoxColunaFab
+            // 
+            this.comboBoxColunaFab.FormattingEnabled = true;
+            this.comboBoxColunaFab.Location = new System.Drawing.Point(367, 145);
+            this.comboBoxColunaFab.Name = "comboBoxColunaFab";
+            this.comboBoxColunaFab.Size = new System.Drawing.Size(130, 21);
+            this.comboBoxColunaFab.TabIndex = 19;
+            // 
+            // labelColunaFabricante
+            // 
+            this.labelColunaFabricante.AutoSize = true;
+            this.labelColunaFabricante.Location = new System.Drawing.Point(367, 128);
+            this.labelColunaFabricante.Name = "labelColunaFabricante";
+            this.labelColunaFabricante.Size = new System.Drawing.Size(93, 13);
+            this.labelColunaFabricante.TabIndex = 20;
+            this.labelColunaFabricante.Text = "Coluna Fabricante";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(512, 409);
+            this.Controls.Add(this.labelColunaFabricante);
+            this.Controls.Add(this.comboBoxColunaFab);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.comboBoxAbaLeituraEscrita);
             this.Controls.Add(this.comboBoxColunaEscrita);
@@ -233,7 +255,7 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.buttonSelecionar);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBoxSalvarOnde);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.btnIniciar);
             this.Controls.Add(this.label4);
@@ -265,7 +287,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnIniciar;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxSalvarOnde;
         private System.Windows.Forms.Button buttonSelecionar;
         private System.Windows.Forms.OpenFileDialog openFileDialogSelecionarPlanilha;
         private System.Windows.Forms.Label label6;
@@ -274,6 +296,9 @@
         private System.Windows.Forms.ComboBox comboBoxColunaEscrita;
         private System.Windows.Forms.ComboBox comboBoxAbaLeituraEscrita;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox comboBoxColunaFab;
+        private System.Windows.Forms.Label labelColunaFabricante;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogSave;
     }
 }
 

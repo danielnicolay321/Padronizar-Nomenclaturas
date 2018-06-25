@@ -28,7 +28,7 @@ namespace Padronizar_Nomenclaturas
         private void buttonProcurar_Click(object sender, EventArgs e)
         {
             btnIniciar.Enabled = false;
-            textBoxSelecionePlanilha.Text = ChooseFolder();
+            textBoxSelecionePlanilha.Text = ChooseFolder(openFileDialogSelecionarPlanilha);
 
             try
             {
@@ -50,8 +50,40 @@ namespace Padronizar_Nomenclaturas
             }
         }
 
+        // selecionar local para salvar
+        private void buttonSelecionar_Click(object sender, EventArgs e)
+        {
+            textBoxSalvarOnde.Text = SaveFolder(folderBrowserDialogSave);
+            
+        }
+
         private void comboBoxAbaLeituraEscrita_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            try
+            {
+                var result = doThings.ValidarEntradasAbaDePara(comboBoxAbaLeituraEscrita.GetItemText(comboBoxDePara.SelectedItem));
+
+                //  var colunas = result.Where(x => x.Key.Equals(comboBoxDePara.GetItemText(comboBoxDePara.SelectedItem))).Select(z => z.Value);
+                var colunas = result.First(x => x.Key == comboBoxAbaLeituraEscrita.GetItemText(comboBoxDePara.SelectedItem)).Value;//.ToDictionary(dc => dc.Key, dc => dc.Value);
+
+                comboBoxColunaLeitura.DataSource = new BindingSource(colunas, null);
+                comboBoxColunaLeitura.DisplayMember = "Value";
+                comboBoxColunaLeitura.ValueMember = "Key";
+
+                comboBoxColunaEscrita.DataSource = new BindingSource(colunas, null);
+                comboBoxColunaEscrita.DisplayMember = "Value";
+                comboBoxColunaEscrita.ValueMember = "Key";
+
+                comboBoxColunaFab.DataSource = new BindingSource(colunas, null);
+                comboBoxColunaFab.DisplayMember = "Value";
+                comboBoxColunaFab.ValueMember = "Key";
+
+                btnIniciar.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("");
+            }
 
         }
 
@@ -81,27 +113,43 @@ namespace Padronizar_Nomenclaturas
             }
         }
 
-        public string ChooseFolder()
+        public string ChooseFolder(OpenFileDialog openfiledialog)
         {
             //lblStatus.Text = "escolhendo arquivo...";
-            if (openFileDialogSelecionarPlanilha.ShowDialog() == DialogResult.OK)
+            if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
-                return openFileDialogSelecionarPlanilha.FileName;
+                return openfiledialog.FileName;
             }
             return "";
         }
 
-        // selecionar local para salvar
-        private void buttonSelecionar_Click(object sender, EventArgs e)
+        public string SaveFolder(FolderBrowserDialog folderBrowserDialogSave)
         {
-
+            if (folderBrowserDialogSave.ShowDialog() == DialogResult.OK)
+            {
+                return folderBrowserDialogSave.SelectedPath;
+            }
+            return "";
         }
+
+       
 
         private void btnIniciar_Click(object sender, EventArgs e)
         {
             var values = doThings.CarregarValoresDePara(comboBoxColunaFabricante.GetItemText(comboBoxColunaFabricante.SelectedItem),
               comboBoxColunaModeloPadrao.GetItemText(comboBoxColunaModeloPadrao.SelectedItem),
                 comboBoxDePara.GetItemText(comboBoxDePara.SelectedItem));
+
+            var sheetName = comboBoxAbaLeituraEscrita.GetItemText(comboBoxAbaLeituraEscrita.SelectedItem);
+            var columnToRead = comboBoxColunaLeitura.GetItemText(comboBoxColunaLeitura.SelectedItem);
+            var columnToWrite = comboBoxColunaEscrita.GetItemText(comboBoxColunaEscrita.SelectedItem);
+            var columnFabricante = comboBoxColunaFab.GetItemText(comboBoxColunaFab.SelectedItem);
+            var path = textBoxSalvarOnde.Text;
+            //string sheetName, string columnToRead, string columnToWrite
+
+            doThings.SetColumnIndexOfReadAndWrite(sheetName, columnToRead, columnToWrite, columnFabricante);
+            doThings.WriteExcelFile(sheetName, columnToRead, columnToWrite, path);
+
         }
 
       
